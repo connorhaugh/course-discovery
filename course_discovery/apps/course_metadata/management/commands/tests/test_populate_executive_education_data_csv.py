@@ -201,6 +201,7 @@ class TestPopulateExecutiveEducationDataCsv(CSVLoaderMixin, TestCase):
                 assert data_row['Learner Testimonials'] == '<div><p><i>" This is a good course"</i></p><p>-Lorem ' \
                                                            'Ipsum (Gibberish)</p></div>'
                 assert str(date.today().year) in data_row['Publish Date']
+                assert data_row['Restricted'] == 'False'
 
                 log_capture.check_present(
                     (
