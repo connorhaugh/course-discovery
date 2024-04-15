@@ -155,9 +155,10 @@ class Command(BaseCommand):
                     product.pop('variants')
                     for variant in variants:
                         output_dict = self.get_transformed_data(row, product.update({'variant': variant}))
+                        output_writer = self.write_csv_row(output_writer, output_dict)
                 else:
                     output_dict = self.get_transformed_data(row, product)
-                output_writer = self.write_csv_row(output_writer, output_dict)
+                    output_writer = self.write_csv_row(output_writer, output_dict)
                 logger.info(self.SUCCESS_MESSAGE.format(product['name']))  # lint-amnesty, pylint: disable=logging-format-interpolation
 
             logger.info("Data Transformation has completed. Warnings raised during the transformation:")
