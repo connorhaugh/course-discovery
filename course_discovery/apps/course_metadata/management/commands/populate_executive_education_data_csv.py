@@ -322,6 +322,7 @@ class Command(BaseCommand):
             'about_video_link': utils.format_base64_strings(product_dict['videoURL']),
             'variant_id': product_dict['variant']['id'],
             'end_date': product_dict['variant']['endDate'],
+            'restricted': product_dict['variant'].get('websiteVisibility', None) == 'private',
             'length': product_dict['durationWeeks'],
             'redirect_url': utils.format_base64_strings(product_dict.get('edxPlpUrl', '')),
             'external_identifier': product_dict['id'],
