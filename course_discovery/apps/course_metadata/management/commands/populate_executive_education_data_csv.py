@@ -150,7 +150,13 @@ class Command(BaseCommand):
                 if getsmarter_flag:
                     product['organization'] = map_external_org_code_to_internal_org_code(
                         product['universityAbbreviation'], product_source)
-                output_dict = self.get_transformed_data(row, product)
+                if product.get('variants'):
+                    variants = product.get('variants')
+                    product.pop('variants')
+                    for variant in variants:
+                        output_dict = self.get_transformed_data(row, product.update({'variant': variant}))
+                else:
+                    output_dict = self.get_transformed_data(row, product)
                 output_writer = self.write_csv_row(output_writer, output_dict)
                 logger.info(self.SUCCESS_MESSAGE.format(product['name']))  # lint-amnesty, pylint: disable=logging-format-interpolation
 
