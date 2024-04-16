@@ -1,8 +1,8 @@
 """
 Unit tests for populate_executive_education_data_csv management command.
 """
-import csv
 import copy
+import csv
 import json
 from datetime import date
 from tempfile import NamedTemporaryFile
@@ -187,32 +187,50 @@ class TestPopulateExecutiveEducationDataCsv(CSVLoaderMixin, TestCase):
                 ),
             )
 
-    # @mock.patch('course_discovery.apps.course_metadata.utils.GetSmarterEnterpriseApiClient')
-    # def test_successful_file_data_population_with_getsmarter_flag_with_multiple_variants(self, mock_get_smarter_client):
-    #     """
-    #     Verify the successful population has data from API response if getsmarter flag is provided and
-    #     the product can have multiple variants
-    #     """
-    #     mock_get_smarter_client.return_value.request.return_value.json.return_value = self.mock_get_smarter_client_response(version='v2')
-    #     with LogCapture(LOGGER_PATH) as log_capture:
-    #         output_csv = NamedTemporaryFile()
-    #         call_command(
-    #             'populate_executive_education_data_csv',
-    #             '--output_csv', output_csv.name,
-    #             '--use_getsmarter_api_client', True,
-    #         )
-    #         output_csv.seek(0)
-    #         reader = csv.DictReader(open(output_csv.name, 'r'))
-    #         data_row = next(reader)
-    #         # self._assert_api_response(data_row)
+    @mock.patch('course_discovery.apps.course_metadata.utils.GetSmarterEnterpriseApiClient')
+    def test_successful_file_data_population_with_getsmarter_flag_with_multiple_variants(self, mock_get_smarter_client):
+        """
+        Verify the successful population has data from API response if getsmarter flag is provided and
+        the product can have multiple variants
+        """
+        mock_get_smarter_client.return_value.request.return_value.json.return_value = self.mock_get_smarter_client_response(version='v2')
+        with LogCapture(LOGGER_PATH) as log_capture:
+            output_csv = NamedTemporaryFile()
+            call_command(
+                'populate_executive_education_data_csv',
+                '--output_csv', output_csv.name,
+                '--use_getsmarter_api_client', True,
+            )
+            output_csv.seek(0)
+            reader = csv.DictReader(open(output_csv.name, 'r'))
+            
+            data_row = next(reader)
+            assert data_row['Variant Id'] == '00000000-0000-0000-0000-000000000000'
+            assert data_row['Start Time'] == '00:00:00'
+            assert data_row['Start Date'] == '2024-03-20'
+            assert data_row['End Time'] == '00:00:00'
+            assert data_row['End Date'] == '2024-04-28'
+            assert data_row['Reg Close Date'] == '2024-03-26'
+            assert data_row['Reg Close Time'] == '00:00:00'
+            assert data_row['Verified Price'] == '32991.0'
+            
+            data_row = next(reader)
+            assert data_row['Variant Id'] == '00000000-0000-0000-0000-111111111111'
+            assert data_row['Start Time'] == '00:00:00'
+            assert data_row['Start Date'] == '2024-03-20'
+            assert data_row['End Time'] == '00:00:00'
+            assert data_row['End Date'] == '2024-04-28'
+            assert data_row['Reg Close Date'] == '2024-03-26'
+            assert data_row['Reg Close Time'] == '00:00:00'
+            assert data_row['Verified Price'] == '32991.0'
 
-    #         log_capture.check_present(
-    #             (
-    #                 LOGGER_PATH,
-    #                 'INFO',
-    #                 'Data population and transformation completed for CSV row title CSV Course'
-    #             ),
-    #         )
+            log_capture.check_present(
+                (
+                    LOGGER_PATH,
+                    'INFO',
+                    'Data population and transformation completed for CSV row title CSV Course'
+                ),
+            )
 
     @responses.activate
     def test_successful_file_data_population_with_input_csv(self):

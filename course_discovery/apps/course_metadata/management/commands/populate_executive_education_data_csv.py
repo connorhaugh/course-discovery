@@ -151,10 +151,12 @@ class Command(BaseCommand):
                     product['organization'] = map_external_org_code_to_internal_org_code(
                         product['universityAbbreviation'], product_source)
                 if product.get('variants'):
+                    # import pdb; pdb.set_trace()
                     variants = product.get('variants')
                     product.pop('variants')
                     for variant in variants:
-                        output_dict = self.get_transformed_data(row, product.update({'variant': variant}))
+                        product.update({'variant': variant})
+                        output_dict = self.get_transformed_data(row, product)
                         output_writer = self.write_csv_row(output_writer, output_dict)
                 else:
                     output_dict = self.get_transformed_data(row, product)
