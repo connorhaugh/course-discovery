@@ -207,28 +207,29 @@ class TestPopulateExecutiveEducationDataCsv(CSVLoaderMixin, TestCase):
                 )
 
             output_csv.seek(0)
-            reader = csv.DictReader(open(output_csv.name, 'r'))
-            data_row = next(reader)
-            assert data_row['Variant Id'] == '00000000-0000-0000-0000-000000000000'
-            assert data_row['Start Time'] == '00:00:00'
-            assert data_row['Start Date'] == '2024-03-20'
-            assert data_row['End Time'] == '00:00:00'
-            assert data_row['End Date'] == '2024-04-28'
-            assert data_row['Reg Close Date'] == '2024-03-26'
-            assert data_row['Reg Close Time'] == '00:00:00'
-            assert data_row['Verified Price'] == '32991.0'
-            assert data_row['Restricted'] == 'custom-b2b-enterprise'
+            with open(output_csv.name, 'r') as csv_file:
+                reader = csv.DictReader(csv_file)
+                data_row = next(reader)
+                assert data_row['Variant Id'] == '00000000-0000-0000-0000-000000000000'
+                assert data_row['Start Time'] == '00:00:00'
+                assert data_row['Start Date'] == '2024-03-20'
+                assert data_row['End Time'] == '00:00:00'
+                assert data_row['End Date'] == '2024-04-28'
+                assert data_row['Reg Close Date'] == '2024-03-26'
+                assert data_row['Reg Close Time'] == '00:00:00'
+                assert data_row['Verified Price'] == '32991.0'
+                assert data_row['Restricted'] == 'custom-b2b-enterprise'
 
-            data_row = next(reader)
-            assert data_row['Variant Id'] == '00000000-0000-0000-0000-111111111111'
-            assert data_row['Start Time'] == '00:00:00'
-            assert data_row['Start Date'] == '2024-03-20'
-            assert data_row['End Time'] == '00:00:00'
-            assert data_row['End Date'] == '2024-04-28'
-            assert data_row['Reg Close Date'] == '2024-03-26'
-            assert data_row['Reg Close Time'] == '00:00:00'
-            assert data_row['Verified Price'] == '32991.0'
-            assert data_row['Restricted'] == 'None'
+                data_row = next(reader)
+                assert data_row['Variant Id'] == '00000000-0000-0000-0000-111111111111'
+                assert data_row['Start Time'] == '00:00:00'
+                assert data_row['Start Date'] == '2024-03-20'
+                assert data_row['End Time'] == '00:00:00'
+                assert data_row['End Date'] == '2024-04-28'
+                assert data_row['Reg Close Date'] == '2024-03-26'
+                assert data_row['Reg Close Time'] == '00:00:00'
+                assert data_row['Verified Price'] == '32991.0'
+                assert data_row['Restricted'] == 'None'
 
             log_capture.check_present(
                 (
