@@ -106,39 +106,41 @@ class TestPopulateExecutiveEducationDataCsv(CSVLoaderMixin, TestCase):
                 }
             },
         ]}
-    
+
     SUCCESS_API_RESPONSE_V2 = copy.deepcopy(SUCCESS_API_RESPONSE)
     SUCCESS_API_RESPONSE_V2['products'][0].pop('variant')
-    SUCCESS_API_RESPONSE_V2['products'][0].update({
-        'variants': [
-		    {
-	            "id": "00000000-0000-0000-0000-000000000000",
-	            "course": "Oxford Leading Through Uncertainty and Disruption: Building Resilient Organisations Programme 2024-01-31",
-	            "currency": "USD",
-	            "normalPrice": 36991.0,
-	            "discount": 4000.0,
-	            "finalPrice": 32991.0,
-	            "regCloseDate": "2024-03-12",
-	            "startDate": "2024-03-20",
-	            "endDate": "2024-04-28",
-	            "finalRegCloseDate": "2024-03-26",
-				"websiteVisibility": "private"
-            },
-			{
-				"id": "00000000-0000-0000-0000-111111111111",
-				"course": "Oxford Leading Through Uncertainty and Disruption: Building Resilient Organisations Programme 2024-02-06",
-				"currency": "USD",
-				"normalPrice": 36991.0,
-				"discount": 4000.0,
-				"finalPrice": 32991.0,
-				"regCloseDate": "2024-03-12",
-				"startDate": "2024-03-20",
-				"endDate": "2024-04-28",
-				"finalRegCloseDate": "2024-03-26",
-				"websiteVisibility": "public"
-			}
-		]
-    })
+    SUCCESS_API_RESPONSE_V2["products"][0].update(
+        {
+            "variants": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000000",
+                    "course": "Oxford Leading Through Uncertainty and Disruption: Building Resilient Organisations Programme 2024-01-31",
+                    "currency": "USD",
+                    "normalPrice": 36991.0,
+                    "discount": 4000.0,
+                    "finalPrice": 32991.0,
+                    "regCloseDate": "2024-03-12",
+                    "startDate": "2024-03-20",
+                    "endDate": "2024-04-28",
+                    "finalRegCloseDate": "2024-03-26",
+                    "websiteVisibility": "private",
+                },
+                {
+                    "id": "00000000-0000-0000-0000-111111111111",
+                    "course": "Oxford Leading Through Uncertainty and Disruption: Building Resilient Organisations Programme 2024-02-06",
+                    "currency": "USD",
+                    "normalPrice": 36991.0,
+                    "discount": 4000.0,
+                    "finalPrice": 32991.0,
+                    "regCloseDate": "2024-03-12",
+                    "startDate": "2024-03-20",
+                    "endDate": "2024-04-28",
+                    "finalRegCloseDate": "2024-03-26",
+                    "websiteVisibility": "public",
+                },
+            ]
+        }
+    )
 
     def mock_product_api_call(self, version=None):
         """
@@ -203,7 +205,7 @@ class TestPopulateExecutiveEducationDataCsv(CSVLoaderMixin, TestCase):
             )
             output_csv.seek(0)
             reader = csv.DictReader(open(output_csv.name, 'r'))
-            
+
             data_row = next(reader)
             assert data_row['Variant Id'] == '00000000-0000-0000-0000-000000000000'
             assert data_row['Start Time'] == '00:00:00'
@@ -213,7 +215,7 @@ class TestPopulateExecutiveEducationDataCsv(CSVLoaderMixin, TestCase):
             assert data_row['Reg Close Date'] == '2024-03-26'
             assert data_row['Reg Close Time'] == '00:00:00'
             assert data_row['Verified Price'] == '32991.0'
-            
+
             data_row = next(reader)
             assert data_row['Variant Id'] == '00000000-0000-0000-0000-111111111111'
             assert data_row['Start Time'] == '00:00:00'
