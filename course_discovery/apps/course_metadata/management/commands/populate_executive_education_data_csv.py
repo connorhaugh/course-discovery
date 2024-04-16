@@ -307,9 +307,9 @@ class Command(BaseCommand):
 
         return {
             **default_values,
-            "organization": product_dict.get("organization", ""),
-            "organization_short_code_override": product_dict[
-                "altUniversityAbbreviation"
+            'organization': product_dict.get('organization', ''),
+            'organization_short_code_override': product_dict[
+                'altUniversityAbbreviation'
             ],
             "2u_organization_code": product_dict["universityAbbreviation"],
             "number": product_dict["abbreviation"],
@@ -357,8 +357,9 @@ class Command(BaseCommand):
             "2u_title": product_dict["name"],
             "edx_title": product_dict["altName"],
             "short_description": product_dict.get("blurb") or product_dict.get("name"),
-            "what_will_you_learn": product_dict["whatWillSetYouApart"] or 
-                partially_filled_csv_dict.get("what_will_you_learn"),
+            'what_will_you_learn': product_dict['whatWillSetYouApart'] or partially_filled_csv_dict.get(
+                'what_will_you_learn'
+            ),
             "verified_price": partially_filled_csv_dict.get("verified_price") or product_dict["variant"]["finalPrice"],
             "collaborators": partially_filled_csv_dict.get("collaborators", ""),
             "prerequisites": partially_filled_csv_dict.get("prerequisites", ""),
@@ -368,8 +369,9 @@ class Command(BaseCommand):
             "secondary_subject": partially_filled_csv_dict.get("secondary_subject", ""),
             "tertiary_subject": partially_filled_csv_dict.get("tertiary_subject", ""),
             "start_date": partially_filled_csv_dict.get("start_date") or product_dict["variant"]["startDate"],
-            "reg_close_date": partially_filled_csv_dict.get("reg_close_date") or
-                product_dict["variant"]["finalRegCloseDate"],
+            'reg_close_date': partially_filled_csv_dict.get(
+                'reg_close_date'
+            ) or product_dict['variant']['finalRegCloseDate'],
             "minimum_effort": minimum_effort,
             "maximum_effort": maximum_effort,
             "organization_logo_override": utils.format_base64_strings(
