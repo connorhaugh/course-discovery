@@ -151,9 +151,7 @@ class Command(BaseCommand):
                     product['organization'] = map_external_org_code_to_internal_org_code(
                         product['universityAbbreviation'], product_source)
                 if product.get('variants'):
-                    # import pdb; pdb.set_trace()
-                    variants = product.get('variants')
-                    product.pop('variants')
+                    variants = product.pop('variants')
                     for variant in variants:
                         product.update({'variant': variant})
                         output_dict = self.get_transformed_data(row, product)
@@ -309,58 +307,77 @@ class Command(BaseCommand):
 
         return {
             **default_values,
-            'organization': product_dict.get('organization', ''),
-            'organization_short_code_override': product_dict['altUniversityAbbreviation'],
-            '2u_organization_code': product_dict['universityAbbreviation'],
-            'number': product_dict['abbreviation'],
-            'alternate_number': product_dict['altAbbreviation'],
-            'image': utils.format_base64_strings(product_dict['cardUrl']),
-            'primary_subject': product_dict['altSubjectMatter'],
-            '2u_primary_subject': product_dict['subjectMatter'],
-            'subject_subcategory': product_dict['altSubjectMatter1'],
-            'syllabus': utils.format_curriculum(product_dict['curriculum']),
-            'learner_testimonials': utils.format_testimonials(product_dict['testimonials']),
-            'frequently_asked_questions': utils.format_faqs(product_dict['faqs']),
-            'about_video_link': utils.format_base64_strings(product_dict['videoURL']),
-            'variant_id': product_dict['variant']['id'],
-            'end_date': product_dict['variant']['endDate'],
-            'restricted': 'custom-b2b-enterprise' if product_dict['variant'].get('websiteVisibility', None) == 'private' else None,
-            'length': product_dict['durationWeeks'],
-            'redirect_url': utils.format_base64_strings(product_dict.get('edxPlpUrl', '')),
-            'external_identifier': product_dict['id'],
-            'long_description': f"{product_dict['introduction']}{product_dict['isThisCourseForYou']}",
-            'lead_capture_form_url': utils.format_base64_strings(product_dict['lcfURL']),
-            'certificate_header': product_dict['certificate'].get('headline', ''),
-            'certificate_text': product_dict['certificate'].get('blurb', ''),
-            'stat1': stats.get('stat1', ''),
-            'stat1_text': stats.get('stat1Blurb', ''),
-            'stat2': stats.get('stat2', ''),
-            'stat2_text': stats.get('stat2Blurb', ''),
-            'organic_url': utils.format_base64_strings(product_dict.get('edxRedirectUrl', '')),
-            'meta_title': product_dict.get('metaTitle', ''),
-            'meta_description': product_dict.get('metaDescription', ''),
-            'meta_keywords': product_dict.get('metaKeywords', ''),
-            'slug': product_dict.get('slug', ''),
-
-            'title': partially_filled_csv_dict.get('title') or product_dict['altName'] or product_dict['name'],
-            '2u_title': product_dict['name'],
-            'edx_title': product_dict['altName'],
-            'short_description': product_dict.get('blurb') or product_dict.get('name'),
-            'what_will_you_learn': product_dict['whatWillSetYouApart'] or partially_filled_csv_dict.get(
-                'what_will_you_learn'
+            "organization": product_dict.get("organization", ""),
+            "organization_short_code_override": product_dict[
+                "altUniversityAbbreviation"
+            ],
+            "2u_organization_code": product_dict["universityAbbreviation"],
+            "number": product_dict["abbreviation"],
+            "alternate_number": product_dict["altAbbreviation"],
+            "image": utils.format_base64_strings(product_dict["cardUrl"]),
+            "primary_subject": product_dict["altSubjectMatter"],
+            "2u_primary_subject": product_dict["subjectMatter"],
+            "subject_subcategory": product_dict["altSubjectMatter1"],
+            "syllabus": utils.format_curriculum(product_dict["curriculum"]),
+            "learner_testimonials": utils.format_testimonials(
+                product_dict["testimonials"]
             ),
-            'verified_price': partially_filled_csv_dict.get('verified_price') or product_dict['variant']['finalPrice'],
-            'collaborators': partially_filled_csv_dict.get('collaborators', ''),
-            'prerequisites': partially_filled_csv_dict.get('prerequisites', ''),
-            'additional_information': partially_filled_csv_dict.get('additional_information', ''),
-            'secondary_subject': partially_filled_csv_dict.get('secondary_subject', ''),
-            'tertiary_subject': partially_filled_csv_dict.get('tertiary_subject', ''),
-            'start_date': partially_filled_csv_dict.get('start_date') or product_dict['variant']['startDate'],
-            'reg_close_date': partially_filled_csv_dict.get(
-                'reg_close_date'
-            ) or product_dict['variant']['finalRegCloseDate'],
-            'minimum_effort': minimum_effort,
-            'maximum_effort': maximum_effort,
-            'organization_logo_override': utils.format_base64_strings(product_dict['logoUrl']),
-            'external_course_marketing_type': product_dict['productType'],
+            "frequently_asked_questions": utils.format_faqs(product_dict["faqs"]),
+            "about_video_link": utils.format_base64_strings(product_dict["videoURL"]),
+            "variant_id": product_dict["variant"]["id"],
+            "end_date": product_dict["variant"]["endDate"],
+            "restricted": (
+                "custom-b2b-enterprise"
+                if product_dict["variant"].get("websiteVisibility", None) == "private"
+                else None
+            ),
+            "length": product_dict["durationWeeks"],
+            "redirect_url": utils.format_base64_strings(
+                product_dict.get("edxPlpUrl", "")
+            ),
+            "external_identifier": product_dict["id"],
+            "long_description": f"{product_dict['introduction']}{product_dict['isThisCourseForYou']}",
+            "lead_capture_form_url": utils.format_base64_strings(
+                product_dict["lcfURL"]
+            ),
+            "certificate_header": product_dict["certificate"].get("headline", ""),
+            "certificate_text": product_dict["certificate"].get("blurb", ""),
+            "stat1": stats.get("stat1", ""),
+            "stat1_text": stats.get("stat1Blurb", ""),
+            "stat2": stats.get("stat2", ""),
+            "stat2_text": stats.get("stat2Blurb", ""),
+            "organic_url": utils.format_base64_strings(
+                product_dict.get("edxRedirectUrl", "")
+            ),
+            "meta_title": product_dict.get("metaTitle", ""),
+            "meta_description": product_dict.get("metaDescription", ""),
+            "meta_keywords": product_dict.get("metaKeywords", ""),
+            "slug": product_dict.get("slug", ""),
+            "title": partially_filled_csv_dict.get("title")
+            or product_dict["altName"]
+            or product_dict["name"],
+            "2u_title": product_dict["name"],
+            "edx_title": product_dict["altName"],
+            "short_description": product_dict.get("blurb") or product_dict.get("name"),
+            "what_will_you_learn": product_dict["whatWillSetYouApart"]
+            or partially_filled_csv_dict.get("what_will_you_learn"),
+            "verified_price": partially_filled_csv_dict.get("verified_price")
+            or product_dict["variant"]["finalPrice"],
+            "collaborators": partially_filled_csv_dict.get("collaborators", ""),
+            "prerequisites": partially_filled_csv_dict.get("prerequisites", ""),
+            "additional_information": partially_filled_csv_dict.get(
+                "additional_information", ""
+            ),
+            "secondary_subject": partially_filled_csv_dict.get("secondary_subject", ""),
+            "tertiary_subject": partially_filled_csv_dict.get("tertiary_subject", ""),
+            "start_date": partially_filled_csv_dict.get("start_date")
+            or product_dict["variant"]["startDate"],
+            "reg_close_date": partially_filled_csv_dict.get("reg_close_date")
+            or product_dict["variant"]["finalRegCloseDate"],
+            "minimum_effort": minimum_effort,
+            "maximum_effort": maximum_effort,
+            "organization_logo_override": utils.format_base64_strings(
+                product_dict["logoUrl"]
+            ),
+            "external_course_marketing_type": product_dict["productType"],
         }

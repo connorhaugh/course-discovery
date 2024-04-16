@@ -114,7 +114,7 @@ class TestPopulateExecutiveEducationDataCsv(CSVLoaderMixin, TestCase):
             "variants": [
                 {
                     "id": "00000000-0000-0000-0000-000000000000",
-                    "course": "Oxford Leading Through Uncertainty and Disruption: Building Resilient Organisations Programme 2024-01-31",
+                    "course": "Test Organisations Programme 2024-01-31",
                     "currency": "USD",
                     "normalPrice": 36991.0,
                     "discount": 4000.0,
@@ -127,7 +127,7 @@ class TestPopulateExecutiveEducationDataCsv(CSVLoaderMixin, TestCase):
                 },
                 {
                     "id": "00000000-0000-0000-0000-111111111111",
-                    "course": "Oxford Leading Through Uncertainty and Disruption: Building Resilient Organisations Programme 2024-02-06",
+                    "course": "Test Organisations Programme 2024-02-06",
                     "currency": "USD",
                     "normalPrice": 36991.0,
                     "discount": 4000.0,
@@ -195,17 +195,19 @@ class TestPopulateExecutiveEducationDataCsv(CSVLoaderMixin, TestCase):
         Verify the successful population has data from API response if getsmarter flag is provided and
         the product can have multiple variants
         """
-        mock_get_smarter_client.return_value.request.return_value.json.return_value = self.mock_get_smarter_client_response(version='v2')
-        with LogCapture(LOGGER_PATH) as log_capture:
-            output_csv = NamedTemporaryFile()
-            call_command(
-                'populate_executive_education_data_csv',
-                '--output_csv', output_csv.name,
-                '--use_getsmarter_api_client', True,
-            )
+        mock_get_smarter_client.return_value.request.return_value.json.return_value = (
+            self.mock_get_smarter_client_response(version="v2")
+        )
+        with NamedTemporaryFile() as output_csv:
+            with LogCapture(LOGGER_PATH) as log_capture:
+                call_command(
+                    'populate_executive_education_data_csv',
+                    '--output_csv', output_csv.name,
+                    '--use_getsmarter_api_client', True,
+                )
+
             output_csv.seek(0)
             reader = csv.DictReader(open(output_csv.name, 'r'))
-
             data_row = next(reader)
             assert data_row['Variant Id'] == '00000000-0000-0000-0000-000000000000'
             assert data_row['Start Time'] == '00:00:00'
@@ -215,6 +217,7 @@ class TestPopulateExecutiveEducationDataCsv(CSVLoaderMixin, TestCase):
             assert data_row['Reg Close Date'] == '2024-03-26'
             assert data_row['Reg Close Time'] == '00:00:00'
             assert data_row['Verified Price'] == '32991.0'
+            assert data_row['Restricted'] == 'custom-b2b-enterprise'
 
             data_row = next(reader)
             assert data_row['Variant Id'] == '00000000-0000-0000-0000-111111111111'
@@ -225,6 +228,7 @@ class TestPopulateExecutiveEducationDataCsv(CSVLoaderMixin, TestCase):
             assert data_row['Reg Close Date'] == '2024-03-26'
             assert data_row['Reg Close Time'] == '00:00:00'
             assert data_row['Verified Price'] == '32991.0'
+            assert data_row['Restricted'] == 'None'
 
             log_capture.check_present(
                 (
