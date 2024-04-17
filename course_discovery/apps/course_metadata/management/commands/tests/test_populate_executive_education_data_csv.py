@@ -126,7 +126,7 @@ class TestPopulateExecutiveEducationDataCsv(CSVLoaderMixin, TestCase):
                     "websiteVisibility": "private",
                 },
                 {
-                    "id": "00000000-0000-0000-0000-111111111111",
+                    "id": "11111111-1111-1111-1111-111111111111",
                     "course": "Test Organisations Programme 2024-02-06",
                     "currency": "USD",
                     "normalPrice": 36991.0,
@@ -221,7 +221,7 @@ class TestPopulateExecutiveEducationDataCsv(CSVLoaderMixin, TestCase):
                 assert data_row['Restricted'] == 'custom-b2b-enterprise'
 
                 data_row = next(reader)
-                assert data_row['Variant Id'] == '00000000-0000-0000-0000-111111111111'
+                assert data_row['Variant Id'] == "11111111-1111-1111-1111-111111111111"
                 assert data_row['Start Time'] == '00:00:00'
                 assert data_row['Start Date'] == '2024-03-20'
                 assert data_row['End Time'] == '00:00:00'

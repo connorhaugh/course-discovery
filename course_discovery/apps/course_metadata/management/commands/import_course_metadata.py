@@ -72,6 +72,7 @@ class Command(BaseCommand):
         product_type = options.get('product_type', None)
         product_source = options.get('product_source', None)
         use_gspread_client = options.get('use_gspread_client', None)
+        # import pdb; pdb.set_trace()
 
         try:
             partner = Partner.objects.get(short_code=partner_short_code)
@@ -93,6 +94,7 @@ class Command(BaseCommand):
         for model in apps.get_app_config('course_metadata').get_models():
             for signal in (post_save, post_delete):
                 signal.disconnect(receiver=api_change_receiver, sender=model)
+        # import pdb; pdb.set_trace()
         products_json = []
         try:
             loader = CSVDataLoader(
