@@ -557,6 +557,7 @@ class TestIngestionEmail(TestCase):
         Verify the email content for new products.
         """
         uuid = str(uuid4())
+        variant_id = str(uuid4())
         url_slug = 'course-slug-1'
         emails.send_ingestion_email(
             self.partner, self.EMAIL_SUBJECT, self.USER_EMAILS, self.EXEC_ED_PRODUCT, self.source,
@@ -571,6 +572,8 @@ class TestIngestionEmail(TestCase):
                         'external_course_marketing_type': None,
                         'url_slug': url_slug,
                         'rerun': True,
+                        'course_run_variant_id': variant_id,
+                        'restriction_type': 'None',
                     }
                 ],
             }
@@ -585,7 +588,7 @@ class TestIngestionEmail(TestCase):
                 "<tr><th>Updated Products</th><td> 0 </td></tr>",
                 "<h3>New Products</h3>",
                 f"<li><a href='{self.partner.publisher_url}courses/{uuid}'>{uuid}</a> - {url_slug} "
-                f"A new run has been created</li>"
+                f"A new run has been created (variant: {variant_id}) (restriction_type: None)</li>"
             ]
         )
 
