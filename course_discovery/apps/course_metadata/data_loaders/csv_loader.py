@@ -199,6 +199,7 @@ class CSVDataLoader(AbstractDataLoader):
                 course_run = CourseRun.everything.filter(course=course).first()
                 is_course_created = True
                 is_course_run_created = True
+                course_run_restriction = None if row.get('restricted', None) == 'None' else row.get('restricted', None)
 
             is_downloaded = download_and_save_course_image(
                 course,
@@ -268,8 +269,8 @@ class CSVDataLoader(AbstractDataLoader):
             logger.info("Course and course run updated successfully for course key {}".format(course_key))  # lint-amnesty, pylint: disable=logging-format-interpolation
             self.course_uuids[str(course.uuid)] = course_title
             self._register_successful_ingestion(
-                str(course.uuid), is_course_created, is_course_run_created, course.active_url_slug,
-                row.get('external_course_marketing_type', None))
+                str(course.uuid), str(course_run.variant_id), is_course_created, is_course_run_created,
+                course_run_restriction, course.active_url_slug, row.get('external_course_marketing_type', None))
 
         self._archive_stale_products(course_external_identifiers)
         logger.info("CSV loader ingest pipeline has completed.")
@@ -303,8 +304,13 @@ class CSVDataLoader(AbstractDataLoader):
         end_datetime = self.get_formatted_datetime_string(f'{data["end_date"]} {data["end_time"]}')
 
         filtered_course_runs = course_runs.filter(
-            Q(variant_id=variant_id) | (Q(start=start_datetime) & Q(end=end_datetime))
-        ).order_by('created')
+            Q(variant_id=variant_id)
+            | (
+                Q(start=start_datetime)
+                & Q(end=end_datetime)
+                & (Q(variant_id__isnull=True) | Q(variant_id__exact=""))
+            )
+        ).order_by("created")
         course_run = filtered_course_runs.last()
 
         if not course_run:
@@ -403,8 +409,10 @@ class CSVDataLoader(AbstractDataLoader):
     def _register_successful_ingestion(
         self,
         course_uuid,
+        course_run_variant_id,
         is_course_created,
         is_course_run_created,
+        course_run_restriction,
         active_url_slug,
         external_course_marketing_type=None
     ):
@@ -418,7 +426,9 @@ class CSVDataLoader(AbstractDataLoader):
                     'uuid': course_uuid,
                     'external_course_marketing_type': external_course_marketing_type,
                     'url_slug': active_url_slug,
-                    'rerun': is_course_run_created
+                    'rerun': is_course_run_created,
+                    'course_run_variant_id': course_run_variant_id,
+                    'restriction_type': course_run_restriction or 'None'
                 }
             )
         else:
@@ -552,6 +562,7 @@ class CSVDataLoader(AbstractDataLoader):
         transcript_language = self.verify_and_get_language_tags(data['transcript_language'])
         registration_deadline = data.get('reg_close_date', '')
         variant_id = data.get('variant_id', '')
+        restricted = data.get('restricted', None)
 
         update_course_run_data = {
             'run_type': str(course_run.type.uuid),
@@ -580,6 +591,8 @@ class CSVDataLoader(AbstractDataLoader):
             )})
         if variant_id:
             update_course_run_data.update({'variant_id': variant_id})
+        if restricted and not restricted=='None':
+            update_course_run_data.update({'restricted': restricted})
         return update_course_run_data
 
     def get_formatted_datetime_string(self, date_string):
