@@ -169,6 +169,7 @@ class CSVDataLoader(AbstractDataLoader):
             course = Course.objects.filter_drafts(key=course_key, partner=self.partner).first()
             is_course_created = False
             is_course_run_created = False
+            course_run_restriction = None
 
             if course:
                 try:
@@ -305,7 +306,7 @@ class CSVDataLoader(AbstractDataLoader):
 
         filtered_course_runs = course_runs.filter(
             Q(variant_id=variant_id) |
-            (Q(start=start_datetime) & Q(end=end_datetime) & (Q(variant_id__isnull=True) | Q(variant_id__exact='')))
+            (Q(start=start_datetime) & Q(end=end_datetime) & Q(variant_id__isnull=True))
         ).order_by('created')
         course_run = filtered_course_runs.last()
 

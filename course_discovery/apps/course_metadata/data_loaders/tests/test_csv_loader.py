@@ -251,7 +251,6 @@ class TestCSVDataLoader(CSVLoaderMixin, OAuth2Mixin, APITestCase):
                     self._assert_course_run_data(course_run, self.BASE_EXPECTED_COURSE_RUN_DATA)
 
                     assert course.active_url_slug == expected_slug
-                    # import pdb; pdb.set_trace()
                     assert loader.get_ingestion_stats() == {
                         'total_products_count': 1,
                         'success_count': 1,
@@ -551,7 +550,9 @@ class TestCSVDataLoader(CSVLoaderMixin, OAuth2Mixin, APITestCase):
                                 'external_course_marketing_type':
                                     course.additional_metadata.external_course_marketing_type,
                                 'url_slug': course.active_url_slug,
-                                'rerun': True
+                                'rerun': True,
+                                'course_run_variant_id': str(course_run.variant_id),
+                                'restriction_type': 'None',
                             }],
                             'archived_products_count': 0,
                             'archived_products': [],
