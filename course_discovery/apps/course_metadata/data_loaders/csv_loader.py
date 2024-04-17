@@ -304,13 +304,9 @@ class CSVDataLoader(AbstractDataLoader):
         end_datetime = self.get_formatted_datetime_string(f'{data["end_date"]} {data["end_time"]}')
 
         filtered_course_runs = course_runs.filter(
-            Q(variant_id=variant_id)
-            | (
-                Q(start=start_datetime)
-                & Q(end=end_datetime)
-                & (Q(variant_id__isnull=True) | Q(variant_id__exact=""))
-            )
-        ).order_by("created")
+            Q(variant_id=variant_id) | 
+            (Q(start=start_datetime) & Q(end=end_datetime) & (Q(variant_id__isnull=True) | Q(variant_id__exact='')))
+        ).order_by('created')
         course_run = filtered_course_runs.last()
 
         if not course_run:
@@ -591,7 +587,7 @@ class CSVDataLoader(AbstractDataLoader):
             )})
         if variant_id:
             update_course_run_data.update({'variant_id': variant_id})
-        if restricted and not restricted=='None':
+        if restricted and not restricted =='None':
             update_course_run_data.update({'restricted': restricted})
         return update_course_run_data
 
