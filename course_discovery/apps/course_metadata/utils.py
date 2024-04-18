@@ -732,7 +732,7 @@ class HTML2TextWithLangSpans(html2text.HTML2Text):
         if not self.is_p_tag_with_dir:
             super().handle_tag(tag, attrs, start)
 
-        elif tag not in HTML_TAGS_ATTRIBUTE_WHITELIST:
+        elif tag not in HTML_TAGS_ATTRIBUTE_WHITELIST and not tag == 'span':
             if start:
                 self.outtextf(f'<{tag}')
                 if attrs:
