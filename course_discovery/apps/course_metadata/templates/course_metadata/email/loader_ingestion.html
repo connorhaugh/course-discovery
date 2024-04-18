@@ -66,10 +66,13 @@
                         <th>
                             Restriction Type
                         </th>
+                        <th>
+                            Rerun
+                        </th>
                     </tr>
                     <tr>
                         <td>
-                            <a href="{{publisher_url}}courses/{{new_product.uuid}}">{{ new_product.uuid }}</a>
+                            <a href='{{publisher_url}}courses/{{new_product.uuid}}'>{{ new_product.uuid }}</a>
                         </td>
                         <td>
                             {{ new_product.url_slug}}
@@ -87,6 +90,11 @@
                         <td>
                             {% if new_product.restriction_type %}
                                 {{ new_product.restriction_type }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if new_product.rerun %}
+                                A new run has been created
                             {% endif %}
                         </td>
                 </table>
