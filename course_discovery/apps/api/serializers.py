@@ -1071,7 +1071,7 @@ class CourseRunSerializer(MinimalCourseRunSerializer):
             'transcript_languages_search_facet_names'
         )
         read_only_fields = ('enrollment_count', 'recent_enrollment_count', 'content_language_search_facet_name',
-                            'enterprise_subscription_inclusion', 'transcript_languages_search_facet_names')
+                            'enterprise_subscription_inclusion')
 
     def get_instructors(self, obj):  # pylint: disable=unused-argument
         # This field is deprecated. Use the staff field.
@@ -1087,15 +1087,7 @@ class CourseRunSerializer(MinimalCourseRunSerializer):
         return language.get_search_facet_display(translate=True)
 
     def get_transcript_languages_search_facet_names(self, obj):
-        transcript_languages = obj.transcript_languages.all()
-        if not transcript_languages:
-            return None
-
-        transcript_languages_facet_names = []
-        for language in transcript_languages:
-            transcript_languages_facet_names.append(language.get_search_facet_display(translate=True))
-
-        return transcript_languages_facet_names
+        return [lang.get_search_facet_display() for lang in obj.transcript_languages.all()]
 
     def update_video(self, instance, video_data):
         # A separate video object is a historical concept. These days, we really just use the link address. So
