@@ -476,6 +476,7 @@ class TestIngestionEmail(TestCase):
         assert email.alternatives[0][1] == 'text/html'
 
         html = email.alternatives[0][0]
+        # import pdb; pdb.set_trace()
         for html_content in html_contents:
             self.assertInHTML(html_content, html)
 
@@ -587,8 +588,8 @@ class TestIngestionEmail(TestCase):
                 "<tr><th>New Products</th><td> 1 </td></tr>",
                 "<tr><th>Updated Products</th><td> 0 </td></tr>",
                 "<h3>New Products</h3>",
-                f"<li><a href='{self.partner.publisher_url}courses/{uuid}'>{uuid}</a> - {url_slug} "
-                f"A new run has been created (variant: {variant_id}) (restriction_type: None)</li>"
+                "<tr><th>Course UUID</th><th>URL Slug</th><th>External Course Marketing Type</th><th>Variant ID</th><th>Restriction Type</th><th>Rerun</th></tr>",
+                f"<tr><td><a href='{self.partner.publisher_url}courses/{uuid}'>{uuid}</a></td><td>{url_slug}</td><td></td><td>{variant_id}</td><td>None</td><td>A new run has been created</td></tr>",
             ]
         )
 
@@ -636,12 +637,10 @@ class TestIngestionEmail(TestCase):
                 "<tr><th>New Products</th><td> 3 </td></tr>",
                 "<tr><th>Updated Products</th><td> 0 </td></tr>",
                 "<h3>New Products</h3>",
-                f"<li><a href='{self.partner.publisher_url}courses/{uuid}'>{uuid}</a> - {url_slug} "
-                f"(sprint) A new run has been created</li>"
-                f"<li><a href='{self.partner.publisher_url}courses/{uuid}'>{uuid}</a> - {url_slug} "
-                f"(course_stack) A new run has been created</li>"
-                f"<li><a href='{self.partner.publisher_url}courses/{uuid}'>{uuid}</a> - {url_slug} "
-                f"(short_course) A new run has been created</li>"
+                "<tr><th>Course UUID</th><th>URL Slug</th><th>External Course Marketing Type</th><th>Variant ID</th><th>Restriction Type</th><th>Rerun</th></tr>",
+                f"<tr><td><a href='{self.partner.publisher_url}courses/{uuid}'>{uuid}</a></td><td>{url_slug}</td><td>sprint</td><td></td><td></td><td>A new run has been created</td></tr>",
+                f"<tr><td><a href='{self.partner.publisher_url}courses/{uuid}'>{uuid}</a></td><td>{url_slug}</td><td>course_stack</td><td></td><td></td><td>A new run has been created</td></tr>",
+                f"<tr><td><a href='{self.partner.publisher_url}courses/{uuid}'>{uuid}</a></td><td>{url_slug}</td><td>short_course</td><td></td><td></td><td>A new run has been created</td></tr>",
             ]
         )
 
